@@ -1,3 +1,4 @@
+// component/SwipeableRow.tsx
 import React, { Component, PropsWithChildren } from 'react';
 import { Animated, StyleSheet, Text, View, I18nManager } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';

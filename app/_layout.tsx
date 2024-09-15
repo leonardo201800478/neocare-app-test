@@ -1,3 +1,5 @@
+// app/_layout.tsx
+
 import { Session } from '@supabase/supabase-js';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -35,11 +37,11 @@ const InitialLayout = () => {
     if (!initialized) return;
 
     // Check if the path/url is in the (auth) group
-    const inAuthGroup = segments[0] === '(auth)';
+    const inAuthGroup = segments[0] === '(home)';
 
     if (session && !inAuthGroup) {
       // Redirect authenticated users to the list page
-      router.replace('/(auth)/');
+      router.replace('/(home)/');
     } else if (!session) {
       // Redirect unauthenticated users to the login page
       router.replace('/');

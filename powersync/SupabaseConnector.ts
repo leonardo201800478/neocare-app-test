@@ -1,3 +1,5 @@
+// powersync/SupabaseConnector.ts
+
 import {
   AbstractPowerSyncDatabase,
   CrudEntry,
