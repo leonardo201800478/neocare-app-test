@@ -76,7 +76,7 @@ const Page = () => {
     <View style={{ flex: 1 }}>
       <View style={styles.inputRow}>
         <TextInput
-          placeholder="Add new task"
+          placeholder="Adicionar novo Registro"
           style={styles.input}
           value={task}
           onChangeText={setTask}

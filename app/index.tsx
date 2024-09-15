@@ -46,7 +46,7 @@ const Login = () => {
     if (error) {
       Alert.alert(error.message);
     } else if (!session) {
-      Alert.alert('Please check your inbox for email verification!');
+      Alert.alert('Por favor, cheque a sua caixa de emails!');
     }
 
     setLoading(false);
@@ -70,7 +70,7 @@ const Login = () => {
         </View>
       )}
 
-      <Text style={styles.header}>Power Todos</Text>
+      <Text style={styles.header}>Neo Care</Text>
 
       <TextInput
         autoCapitalize="none"
@@ -80,7 +80,7 @@ const Login = () => {
         style={styles.inputField}
       />
       <TextInput
-        placeholder="password"
+        placeholder="Senha"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -88,9 +88,9 @@ const Login = () => {
       />
 
       <TouchableOpacity onPress={onSignInPress} style={styles.button}>
-        <Text style={{ color: '#fff' }}>Sign in</Text>
+        <Text style={{ color: '#fff' }}>Entrar</Text>
       </TouchableOpacity>
-      <Button onPress={onSignUpPress} title="Create Account" color="#fff" />
+      <Button onPress={onSignUpPress} title="Criar uma conta" color="#fff" />
     </View>
   );
 };
