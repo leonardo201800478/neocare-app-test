@@ -1,5 +1,5 @@
-// app/(auth)/Register.tsx
-import { useRouter } from 'expo-router'; // Atualização para o Expo Router
+// app/Register.tsx
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, View, TextInput, TouchableOpacity, Text } from 'react-native';
 

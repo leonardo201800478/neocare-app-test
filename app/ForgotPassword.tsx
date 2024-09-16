@@ -1,5 +1,5 @@
-// app/(auth)/ForgotPassword.tsx
-import { useRouter } from 'expo-router'; // Atualização para o Expo Router
+// app/ForgotPassword.tsx
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, View, TextInput, TouchableOpacity, Text } from 'react-native';
 

@@ -1,4 +1,4 @@
-// app/(auth)/index.tsx
+// app/index.tsx
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, View, TextInput, TouchableOpacity, Text, ActivityIndicator } from 'react-native';

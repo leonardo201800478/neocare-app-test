@@ -1,108 +1,97 @@
-// app/(auth)/index.tsx
+// app/(home)/index.tsx
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import {
-  View,
-  TextInput,
-  FlatList,
-  Text,
-  ListRenderItem,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { TouchableOpacity, View, TextInput, FlatList, Text, StyleSheet } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import AppleStyleSwipeableRow from '~/components/SwipeableRow';
-import { TODOS_TABLE, Todo } from '~/powersync/AppSchema';
+import { PATIENTS_TABLE, Database } from '~/powersync/AppSchema';
 import { useSystem } from '~/powersync/PowerSync';
 import { uuid } from '~/powersync/uuid';
 
-const Page = () => {
-  const [task, setTask] = useState('');
+const HomeScreen: React.FC = () => {
+  const [doctorName, setDoctorName] = useState('');
+  const [patients, setPatients] = useState<Database[typeof PATIENTS_TABLE][]>([]);
   const { supabaseConnector, db } = useSystem();
-  const [todos, setTodos] = useState<Todo[]>([]);
 
   useEffect(() => {
-    loadTodos();
+    loadPatients();
   }, []);
 
-  const loadTodos = async () => {
-    const result = await db.selectFrom(TODOS_TABLE).selectAll().execute();
-    setTodos(result);
+  const loadPatients = async () => {
+    const result = await db.selectFrom(PATIENTS_TABLE).selectAll().execute();
+    setPatients(result);
   };
 
-  const addTodo = async () => {
+  const addDoctor = async () => {
     const { userID } = await supabaseConnector.fetchCredentials();
-    const todoId = uuid();
+    const doctorId = uuid();
 
     await db
-      .insertInto(TODOS_TABLE)
-      .values({ id: todoId, task, user_id: userID, is_complete: 0 })
+      .insertInto('doctors')
+      .values({
+        nome_user: doctorName,
+        owner_id: userID,
+        created_at: new Date().toISOString(),
+        inserted_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
       .execute();
 
-    setTask('');
-    loadTodos();
+    setDoctorName('');
+    loadPatients();
   };
 
-  const updateTodo = async (todo: Todo) => {
-    await db
-      .updateTable(TODOS_TABLE)
-      .where('id', '=', todo.id)
-      .set({ is_complete: todo.is_complete === 1 ? 0 : 1 })
-      .execute();
-    loadTodos();
-  };
-
-  const deleteTodo = async (todo: Todo) => {
-    const result = await db.deleteFrom(TODOS_TABLE).where('id', '=', todo.id).execute();
-    loadTodos();
-  };
-
-  const renderRow: ListRenderItem<any> = ({ item }) => {
-    return (
-      <AppleStyleSwipeableRow
-        onDelete={() => deleteTodo(item)}
-        onToggle={() => updateTodo(item)}
-        todo={item}>
-        <View style={{ padding: 12, flexDirection: 'row', gap: 10, height: 44 }}>
-          <Text style={{ flex: 1 }}>{item.task}</Text>
-          {item.is_complete === 1 && (
-            <Ionicons name="checkmark-done-outline" size={24} color="#00d5ff" />
-          )}
-        </View>
-      </AppleStyleSwipeableRow>
-    );
-  };
+  const renderRow = ({ item }: { item: Database[typeof PATIENTS_TABLE] }) => (
+    <AppleStyleSwipeableRow
+      onDelete={() => console.log('Deleted', item)}
+      onToggle={() => console.log('Toggled', item)}
+      todo={item}>
+      <View style={{ padding: 12, flexDirection: 'row', gap: 10, height: 44 }}>
+        <Text style={{ flex: 1 }}>{item.nome_patients}</Text>
+        <Text style={{ flex: 1 }}>{item.cpf_patients}</Text>
+      </View>
+    </AppleStyleSwipeableRow>
+  );
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.inputRow}>
-        <TextInput
-          placeholder="Adicionar novo Registro"
-          style={styles.input}
-          value={task}
-          onChangeText={setTask}
-        />
-        <TouchableOpacity onPress={addTodo} disabled={task === ''}>
-          <Ionicons name="add-outline" size={24} color="#A700FF" />
-        </TouchableOpacity>
-      </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style={styles.inputRow}>
+          <TextInput
+            placeholder="Adicionar nome do médico"
+            style={styles.input}
+            value={doctorName}
+            onChangeText={setDoctorName}
+          />
+          <TouchableOpacity onPress={addDoctor} disabled={doctorName === ''}>
+            <Ionicons name="add-outline" size={24} color="#A700FF" />
+          </TouchableOpacity>
+        </View>
 
-      {todos && (
-        <FlatList
-          data={todos}
-          renderItem={renderRow}
-          ItemSeparatorComponent={() => (
-            <View
-              style={{ height: StyleSheet.hairlineWidth, width: '100%', backgroundColor: 'gray' }}
-            />
-          )}
-        />
-      )}
-    </View>
+        {patients.length > 0 && (
+          <FlatList
+            data={patients}
+            renderItem={renderRow}
+            keyExtractor={(item) => item.cpf_patients.toString()}
+            ItemSeparatorComponent={() => (
+              <View
+                style={{ height: StyleSheet.hairlineWidth, width: '100%', backgroundColor: 'gray' }}
+              />
+            )}
+          />
+        )}
+      </View>
+    </GestureHandlerRootView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#fff',
+  },
   inputRow: {
     flexDirection: 'row',
     gap: 10,
@@ -120,4 +109,5 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
 });
-export default Page;
+
+export default HomeScreen;
