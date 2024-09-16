@@ -1,5 +1,4 @@
 // powersync/AppSchema.ts
-
 import { column, Schema, Table } from '@powersync/react-native';
 
 export const DOCTORS_TABLE = 'doctors';
@@ -9,6 +8,7 @@ export const ATTENDANCES_TABLE = 'attendances';
 // Doctors table using the new Table constructor format
 const doctors = new Table(
   {
+    user_id: column.text,
     created_at: column.text,
     nome_user: column.text,
     owner_id: column.text,
