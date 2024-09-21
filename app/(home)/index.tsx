@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { TouchableOpacity, View, TextInput, FlatList, Text, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import AppleStyleSwipeableRow from '~/components/SwipeableRow';
 import { PATIENTS_TABLE, Database } from '~/powersync/AppSchema';
 import { useSystem } from '~/powersync/PowerSync';
 
@@ -29,20 +28,15 @@ const HomeScreen: React.FC = () => {
   );
 
   const renderRow = ({ item }: { item: Database[typeof PATIENTS_TABLE] }) => (
-    <AppleStyleSwipeableRow
-      onDelete={() => console.log('Deleted', item)}
-      onToggle={() => console.log('Toggled', item)}
-      patient={item}>
-      <TouchableOpacity
-        onPress={() => {
-          /* Navegar para a tela de detalhes do paciente */
-        }}>
-        <View style={{ padding: 12, flexDirection: 'row', gap: 10, height: 44 }}>
-          <Text style={{ flex: 1 }}>{item.nome_patients}</Text>
-          <Text style={{ flex: 1 }}>{item.cpf_patients}</Text>
-        </View>
-      </TouchableOpacity>
-    </AppleStyleSwipeableRow>
+    <TouchableOpacity
+      onPress={() => {
+        /* Navegar para a tela de detalhes do paciente */
+      }}>
+      <View style={{ padding: 12, flexDirection: 'row', gap: 10, height: 44 }}>
+        <Text style={{ flex: 1 }}>{item.nome_patients}</Text>
+        <Text style={{ flex: 1 }}>{item.cpf_patients}</Text>
+      </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -58,17 +52,12 @@ const HomeScreen: React.FC = () => {
           <FlatList
             data={filteredPatients}
             renderItem={({ item }) => (
-              <AppleStyleSwipeableRow
-                onDelete={() => console.log('Deleted', item)}
-                onToggle={() => console.log('Toggled', item)}
-                patient={item}>
-                <TouchableOpacity onPress={() => router.push(`/patient:${item.cpf_patients}`)}>
-                  <View style={{ padding: 12, flexDirection: 'row', gap: 10, height: 44 }}>
-                    <Text style={{ flex: 1 }}>{item.nome_patients}</Text>
-                    <Text style={{ flex: 1 }}>{item.cpf_patients}</Text>
-                  </View>
-                </TouchableOpacity>
-              </AppleStyleSwipeableRow>
+              <TouchableOpacity onPress={() => router.push(`/patient:${item.cpf_patients}`)}>
+                <View style={{ padding: 12, flexDirection: 'row', gap: 10, height: 44 }}>
+                  <Text style={{ flex: 1 }}>{item.nome_patients}</Text>
+                  <Text style={{ flex: 1 }}>{item.cpf_patients}</Text>
+                </View>
+              </TouchableOpacity>
             )}
             keyExtractor={(item) => item.cpf_patients?.toString() ?? ''}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
