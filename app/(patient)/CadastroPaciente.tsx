@@ -6,6 +6,7 @@ import { View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
 import styles from '../styles/AuthStyles'; // Usando estilos da tela de Login
 
 import { useSystem } from '~/powersync/PowerSync';
+import { uuid } from '~/powersync/uuid'; // Importando a função uuid
 
 const CadastroPaciente = () => {
   const [nome, setNome] = useState('');
@@ -35,7 +36,7 @@ const CadastroPaciente = () => {
       await db
         .insertInto('patients')
         .values({
-          id: db.generateId(), // Assuming you have a method to generate IDs
+          id: uuid(), // Usando a função uuid para gerar o ID
           nome_patients: nome,
           cpf_patients: Number(cpf),
           data_nasc_patients: dataNasc,

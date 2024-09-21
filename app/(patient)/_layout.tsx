@@ -1,5 +1,5 @@
 // app/(patient)/index.tsx
-import { useRouter, useSearchParams } from 'expo-router';
+import { useGlobalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 
@@ -8,7 +8,7 @@ import { useSystem } from '~/powersync/PowerSync';
 const PacienteDetails = () => {
   const { db } = useSystem();
   const router = useRouter();
-  const { cpf } = useSearchParams();
+  const { cpf } = useGlobalSearchParams();
   const [paciente, setPaciente] = useState<any>(null);
 
   useEffect(() => {
