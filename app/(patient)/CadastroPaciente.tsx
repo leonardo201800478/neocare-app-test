@@ -1,9 +1,8 @@
-// app/(patient)/CadastroPaciente.tsx
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
 
-import styles from '../styles/AuthStyles'; // Usando estilos da tela de Login
+import styles from '../styles/CadastroPacienteStyles'; // Importando os novos estilos
 
 import { useSystem } from '~/powersync/PowerSync';
 import { uuid } from '~/powersync/uuid'; // Importando a função uuid
@@ -65,21 +64,14 @@ const CadastroPaciente = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Cadastro de Paciente</Text>
+      <Text style={styles.header}>Dados do Paciente</Text>
       <TextInput placeholder="Nome" value={nome} onChangeText={setNome} style={styles.input} />
       <TextInput
-        placeholder="CPF"
+        placeholder="CPF da criança ou do responsável"
         value={cpf}
         onChangeText={setCpf}
         style={styles.input}
         keyboardType="numeric"
-      />
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-        keyboardType="email-address"
       />
       <TextInput
         placeholder="Data de Nascimento"
@@ -89,47 +81,65 @@ const CadastroPaciente = () => {
         keyboardType="numeric"
       />
       <TextInput
-        placeholder="CEP"
-        value={cep}
-        onChangeText={setCep}
+        placeholder="E-mail"
+        value={email}
+        onChangeText={setEmail}
         style={styles.input}
-        keyboardType="numeric"
+        keyboardType="email-address"
       />
-      <TextInput placeholder="UF" value={uf} onChangeText={setUf} style={styles.input} />
+
+      <View style={styles.row}>
+        <TextInput
+          placeholder="Telefone"
+          value={telefone}
+          onChangeText={setTelefone}
+          style={styles.inputSmall}
+          keyboardType="phone-pad"
+        />
+        <TextInput
+          placeholder="CEP"
+          value={cep}
+          onChangeText={setCep}
+          style={styles.inputSmall}
+          keyboardType="numeric"
+        />
+      </View>
+
       <TextInput
-        placeholder="Cidade"
-        value={cidade}
-        onChangeText={setCidade}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Bairro"
-        value={bairro}
-        onChangeText={setBairro}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Número"
-        value={numero}
-        onChangeText={setNumero}
-        style={styles.input}
-        keyboardType="numeric"
-      />
-      <TextInput
-        placeholder="Telefone"
-        value={telefone}
-        onChangeText={setTelefone}
-        style={styles.input}
-        keyboardType="phone-pad"
-      />
-      <TextInput
-        placeholder="Endereço"
+        placeholder="Logradouro"
         value={endereco}
         onChangeText={setEndereco}
         style={styles.input}
       />
+
+      <View style={styles.row}>
+        <TextInput
+          placeholder="Número"
+          value={numero}
+          onChangeText={setNumero}
+          style={styles.inputSmall}
+          keyboardType="numeric"
+        />
+        <TextInput
+          placeholder="Bairro"
+          value={bairro}
+          onChangeText={setBairro}
+          style={styles.inputSmall}
+        />
+      </View>
+
+      <View style={styles.row}>
+        <TextInput
+          placeholder="Cidade"
+          value={cidade}
+          onChangeText={setCidade}
+          style={styles.inputSmall}
+        />
+        <TextInput placeholder="UF" value={uf} onChangeText={setUf} style={styles.inputSmall} />
+      </View>
+
       <TouchableOpacity style={styles.button} onPress={handleCadastro}>
-        <Text style={styles.buttonText}>Cadastrar Paciente</Text>
+        <Text style={styles.buttonText}>Próximo</Text>
       </TouchableOpacity>
     </View>
   );

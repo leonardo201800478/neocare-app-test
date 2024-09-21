@@ -14,17 +14,17 @@ const Login = () => {
   const { supabaseConnector } = useSystem();
   const router = useRouter();
 
-    const onSignInPress = async () => {
-      setLoading(true);
-      try {
-        // Use the PowerSync specific login method
-        await supabaseConnector.login(email, password);
-      } catch (error: any) {
-        Alert.alert(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const onSignInPress = async () => {
+    setLoading(true);
+    try {
+      // Use the PowerSync specific login method
+      await supabaseConnector.login(email, password);
+    } catch (error: any) {
+      Alert.alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
