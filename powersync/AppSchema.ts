@@ -1,26 +1,34 @@
 // powersync/AppSchema.ts
+
 import { column, Schema, Table } from '@powersync/react-native';
 
+// Nome das tabelas
 export const DOCTORS_TABLE = 'doctors';
 export const PATIENTS_TABLE = 'patients';
 export const ATTENDANCES_TABLE = 'attendances';
 
-// Doctors table using the new Table constructor format
+// Doctors table
 const doctors = new Table(
   {
-    user_id: column.text,
+    id: column.text,
     created_at: column.text,
     nome_user: column.text,
+    email_user: column.text,
     owner_id: column.text,
     inserted_at: column.text,
-    updated_at: column.text,
+    updated_at: column.text
   },
-  { indexes: { createdAtIndex: ['created_at'] } }
+  {
+    indexes: {
+      owner_id_index: ['owner_id']
+    }
+  }
 );
 
-// Patients table using the new Table constructor format
+// Patients table
 const patients = new Table(
   {
+    id: column.text,
     created_at: column.text,
     nome_patients: column.text,
     cpf_patients: column.integer,
@@ -35,13 +43,19 @@ const patients = new Table(
     numero_patients: column.integer,
     inserted_at: column.text,
     updated_at: column.text,
+    doctor_id: column.text
   },
-  { indexes: { nomeIndex: ['nome_patients'] } }
+  {
+    indexes: {
+      doctor_id_index: ['doctor_id']
+    }
+  }
 );
 
-// Attendances table using the new Table constructor format
+// Attendances table
 const attendances = new Table(
   {
+    id: column.text,
     created_at: column.text,
     created_by: column.text,
     doctor_id: column.text,
@@ -77,24 +91,36 @@ const attendances = new Table(
     trat_mae: column.integer,
     descr_mae: column.text,
     inserted_at: column.text,
-    updated_at: column.text,
+    updated_at: column.text
   },
-  { indexes: { patientIndex: ['patient_id'] } }
+  {
+    indexes: {
+      doctor_patient_index: ['doctor_id', 'patient_id']
+    }
+  }
 );
 
-// App Schema that includes all tables
-export const AppSchema = new Schema([doctors, patients, attendances]);
+// App Schema
+export const AppSchema = new Schema({
+  doctors,
+  patients,
+  attendances
+});
 
-// Type definitions for the tables
-export type Database = {
+// Definição de tipos para as tabelas
+export type Database = (typeof AppSchema)['types'];
+export type Todo = Database & {
   [DOCTORS_TABLE]: {
+    id: string;
     created_at: string;
     nome_user: string;
+    email_user: string;
     owner_id: string;
     inserted_at: string;
     updated_at: string;
   };
   [PATIENTS_TABLE]: {
+    id: string;
     created_at: string;
     nome_patients: string;
     cpf_patients: number;
@@ -109,8 +135,10 @@ export type Database = {
     numero_patients: number;
     inserted_at: string;
     updated_at: string;
+    doctor_id: string;
   };
   [ATTENDANCES_TABLE]: {
+    id: string;
     created_at: string;
     created_by: string;
     doctor_id: string;

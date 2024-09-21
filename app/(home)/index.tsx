@@ -1,5 +1,5 @@
 // app/(home)/index.tsx
-import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { TouchableOpacity, View, TextInput, FlatList, Text, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -7,12 +7,11 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AppleStyleSwipeableRow from '~/components/SwipeableRow';
 import { PATIENTS_TABLE, Database } from '~/powersync/AppSchema';
 import { useSystem } from '~/powersync/PowerSync';
-import { uuid } from '~/powersync/uuid';
 
 const HomeScreen: React.FC = () => {
-  const [doctorName, setDoctorName] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [patients, setPatients] = useState<Database[typeof PATIENTS_TABLE][]>([]);
-  const { supabaseConnector, db } = useSystem();
+  const { db } = useSystem();
 
   useEffect(() => {
     loadPatients();
@@ -23,62 +22,65 @@ const HomeScreen: React.FC = () => {
     setPatients(result);
   };
 
-  const addDoctor = async () => {
-    const { userID } = await supabaseConnector.fetchCredentials();
-    const doctorId = uuid();
-
-    await db
-      .insertInto('doctors')
-      .values({
-        nome_user: doctorName,
-        owner_id: userID,
-        created_at: new Date().toISOString(),
-        inserted_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .execute();
-
-    setDoctorName('');
-    loadPatients();
-  };
+  const filteredPatients = patients.filter(
+    (patient) =>
+      (patient.nome_patients?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
+      (patient.cpf_patients?.toString().includes(searchQuery) ?? false)
+  );
 
   const renderRow = ({ item }: { item: Database[typeof PATIENTS_TABLE] }) => (
     <AppleStyleSwipeableRow
       onDelete={() => console.log('Deleted', item)}
       onToggle={() => console.log('Toggled', item)}
-      todo={item}>
-      <View style={{ padding: 12, flexDirection: 'row', gap: 10, height: 44 }}>
-        <Text style={{ flex: 1 }}>{item.nome_patients}</Text>
-        <Text style={{ flex: 1 }}>{item.cpf_patients}</Text>
-      </View>
+      patient={item}>
+      <TouchableOpacity
+        onPress={() => {
+          /* Navegar para a tela de detalhes do paciente */
+        }}>
+        <View style={{ padding: 12, flexDirection: 'row', gap: 10, height: 44 }}>
+          <Text style={{ flex: 1 }}>{item.nome_patients}</Text>
+          <Text style={{ flex: 1 }}>{item.cpf_patients}</Text>
+        </View>
+      </TouchableOpacity>
     </AppleStyleSwipeableRow>
   );
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <View style={styles.inputRow}>
-          <TextInput
-            placeholder="Adicionar nome do médico"
-            style={styles.input}
-            value={doctorName}
-            onChangeText={setDoctorName}
-          />
-          <TouchableOpacity onPress={addDoctor} disabled={doctorName === ''}>
-            <Ionicons name="add-outline" size={24} color="#A700FF" />
-          </TouchableOpacity>
-        </View>
-
-        {patients.length > 0 && (
+        <TextInput
+          placeholder="Pesquisar por nome ou CPF"
+          style={styles.input}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+        {filteredPatients.length > 0 && (
           <FlatList
-            data={patients}
-            renderItem={renderRow}
-            keyExtractor={(item) => item.cpf_patients.toString()}
-            ItemSeparatorComponent={() => (
-              <View
-                style={{ height: StyleSheet.hairlineWidth, width: '100%', backgroundColor: 'gray' }}
-              />
+            data={filteredPatients}
+            renderItem={({ item }) => (
+              <AppleStyleSwipeableRow
+                onDelete={() => console.log('Deleted', item)}
+                onToggle={() => console.log('Toggled', item)}
+                patient={item}>
+                <TouchableOpacity onPress={() => router.push(`/patient:${item.cpf_patients}`)}>
+                  <View style={{ padding: 12, flexDirection: 'row', gap: 10, height: 44 }}>
+                    <Text style={{ flex: 1 }}>{item.nome_patients}</Text>
+                    <Text style={{ flex: 1 }}>{item.cpf_patients}</Text>
+                  </View>
+                </TouchableOpacity>
+              </AppleStyleSwipeableRow>
             )}
+            keyExtractor={(item) => item.cpf_patients?.toString() ?? ''}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+          />
+        )}
+
+        {filteredPatients.length > 0 && (
+          <FlatList
+            data={filteredPatients}
+            renderItem={renderRow}
+            keyExtractor={(item) => item.cpf_patients?.toString() ?? ''}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
         )}
       </View>
@@ -92,21 +94,26 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
-  inputRow: {
-    flexDirection: 'row',
-    gap: 10,
-    backgroundColor: '#151515',
-    padding: 6,
-    alignItems: 'center',
-  },
   input: {
-    flex: 1,
-    backgroundColor: '#363636',
+    backgroundColor: '#f0f0f0',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  button: {
+    backgroundColor: '#005F9E',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  buttonText: {
     color: '#fff',
-    padding: 8,
-    borderWidth: 1,
-    borderColor: '#A700FF',
-    borderRadius: 4,
+    fontSize: 16,
+  },
+  separator: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: '#ccc',
   },
 });
 
