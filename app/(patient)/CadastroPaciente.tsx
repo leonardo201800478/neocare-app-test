@@ -10,15 +10,21 @@ import { useSystem } from '~/powersync/PowerSync';
 const CadastroPaciente = () => {
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
+  const [dataNasc, setDataNasc] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
+  const [cep, setCep] = useState('');
+  const [uf, setUf] = useState('');
+  const [cidade, setCidade] = useState('');
+  const [bairro, setBairro] = useState('');
+  const [numero, setNumero] = useState('');
   const [endereco, setEndereco] = useState('');
   const router = useRouter();
   const { db, supabaseConnector } = useSystem();
 
   const handleCadastro = async () => {
-    if (!nome || !cpf) {
-      Alert.alert('Erro', 'Nome e CPF são obrigatórios');
+    if (!nome || !cpf || !dataNasc) {
+      Alert.alert('Erro', 'Nome, CPF e Data de Nascimento são obrigatórios');
       return;
     }
 
@@ -32,8 +38,14 @@ const CadastroPaciente = () => {
           id: db.generateId(), // Assuming you have a method to generate IDs
           nome_patients: nome,
           cpf_patients: Number(cpf),
+          data_nasc_patients: dataNasc,
           email_patients: email,
           fone_patients: Number(telefone),
+          cep_patients: Number(cep),
+          uf_patients: uf,
+          cidade_patients: cidade,
+          bairro_patients: bairro,
+          numero_patients: Number(numero),
           logradouro_patients: endereco,
           doctor_id: doctorId,
           created_at: new Date().toISOString(),
@@ -67,6 +79,40 @@ const CadastroPaciente = () => {
         onChangeText={setEmail}
         style={styles.input}
         keyboardType="email-address"
+      />
+      <TextInput
+        placeholder="Data de Nascimento"
+        value={dataNasc}
+        onChangeText={setDataNasc}
+        style={styles.input}
+        keyboardType="numeric"
+      />
+      <TextInput
+        placeholder="CEP"
+        value={cep}
+        onChangeText={setCep}
+        style={styles.input}
+        keyboardType="numeric"
+      />
+      <TextInput placeholder="UF" value={uf} onChangeText={setUf} style={styles.input} />
+      <TextInput
+        placeholder="Cidade"
+        value={cidade}
+        onChangeText={setCidade}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Bairro"
+        value={bairro}
+        onChangeText={setBairro}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Número"
+        value={numero}
+        onChangeText={setNumero}
+        style={styles.input}
+        keyboardType="numeric"
       />
       <TextInput
         placeholder="Telefone"

@@ -44,10 +44,15 @@ const PacienteDetails = () => {
       <Text style={styles.header}>Dados do Paciente</Text>
       <Text>Nome: {paciente.nome_patients}</Text>
       <Text>CPF: {paciente.cpf_patients}</Text>
+      <Text>Data de Nascimento: {paciente.data_nasc_patients}</Text>
       <Text>Email: {paciente.email_patients}</Text>
-      <Text>Telefone: {paciente.fone_patients}</Text>
+      <Text>CEP: {paciente.cep_patients}</Text>
+      <Text>UF: {paciente.uf_patients}</Text>
+      <Text>Cidade: {paciente.cidade_patients}</Text>
+      <Text>Bairro: {paciente.bairro_patients}</Text>
+      <Text>Número: {paciente.numero_patients}</Text>
       <Text>Endereço: {paciente.logradouro_patients}</Text>
-
+      <Text>Telefone: {paciente.fone_patients}</Text>
       <View style={styles.buttons}>
         <TouchableOpacity style={styles.buttonDelete} onPress={deletePaciente}>
           <Text style={styles.buttonText}>Deletar Paciente</Text>

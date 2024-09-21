@@ -1,7 +1,7 @@
 // app/(home)/_layout.tsx
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { useSystem } from '~/powersync/PowerSync';
