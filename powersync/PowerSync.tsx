@@ -1,14 +1,8 @@
-// powerSync/PowerSync.tsx
-
-import '@azure/core-asynciterator-polyfill';
-
 import 'react-native-polyfill-globals/auto';
 import { Kysely, wrapPowerSyncWithKysely } from '@powersync/kysely-driver';
 import { PowerSyncDatabase } from '@powersync/react-native';
 import React from 'react';
-
 import { AppSchema, Database } from './AppSchema';
-
 import { SupabaseConnector } from '~/powersync/SupabaseConnector';
 
 export class System {
@@ -28,7 +22,7 @@ export class System {
   }
 
   async init() {
-    console.log('Initializing system');
+    console.log('Inicializando o sistema');
     await this.powersync.init();
     await this.powersync.connect(this.supabaseConnector);
   }

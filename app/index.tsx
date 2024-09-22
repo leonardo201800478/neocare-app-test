@@ -6,18 +6,17 @@ const Index = () => {
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
 
-  // Controla a montagem inicial
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
     if (isMounted) {
-      router.replace('/auth/Login'); // Redireciona automaticamente para a tela de Login
+      router.replace('/auth/Login'); // Redireciona para a tela de Login
     }
-  }, [isMounted]);
+  }, [isMounted, router]);
 
-  return null; // Não renderiza nada, apenas redireciona
+  return null;
 };
 
 export default Index;

@@ -3,10 +3,10 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Alert, ActivityIndicator } from 'react-native';
 
-import styles from '../styles/CadastroPacienteStyles'; // Importando os novos estilos
+import styles from '../styles/CadastroPacienteStyles';
 
 import { useSystem } from '~/powersync/PowerSync';
-import { uuid } from '~/powersync/uuid'; // Importando a função uuid
+import { uuid } from '~/powersync/uuid';
 
 const CadastroPaciente = () => {
   const [loading, setLoading] = useState(false);
@@ -33,9 +33,10 @@ const CadastroPaciente = () => {
     }
 
     try {
-      const { userID } = await supabaseConnector.fetchCredentials();
-      const doctorId = userID; // Id do médico logado
+      const { userID } = await supabaseConnector.fetchCredentials(); // Pegando as credenciais do usuário logado
+      const doctorId = userID; // Pegando o id do médico logado
 
+      // Salvando o paciente na tabela patients
       await db
         .insertInto('patients')
         .values({
@@ -51,7 +52,7 @@ const CadastroPaciente = () => {
           bairro_patients: bairro,
           numero_patients: Number(numero),
           logradouro_patients: endereco,
-          doctor_id: doctorId,
+          doctor_id: doctorId, // Vinculando o id do médico logado
           created_at: new Date().toISOString(),
           inserted_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
@@ -59,7 +60,7 @@ const CadastroPaciente = () => {
         .execute();
 
       Alert.alert('Sucesso', 'Paciente cadastrado com sucesso');
-      router.replace(`./home`); // Navegar para a tela do paciente com os dados
+      router.replace('../home');
     } catch (error) {
       console.error(error);
       Alert.alert('Erro', 'Ocorreu um erro ao cadastrar o paciente');

@@ -1,15 +1,14 @@
-// sync-rules.yaml for Powersync
-
 bucket_definitions:
   user_doctors:
-    # Separate bucket per doctor
+    # Bucket separado por médico
     parameters: select id as doctor_id from doctors where owner_id = request.user_id()
     data:
       # Sincronizar dados do médico logado
       - select * from doctors where id = bucket.doctor_id
-      # Sincronizar pacientes vinculados ao médico
+      # Sincronizar pacientes vinculados ao médico logado
       - select * from patients where doctor_id = bucket.doctor_id
-      # Sincronizar prontuários (attendances) vinculados ao médico e seus pacientes
+      # Sincronizar prontuários vinculados ao médico e seus pacientes
       - select * from attendances where doctor_id = bucket.doctor_id
-      # Adicional: garantir que as modificações feitas por médicos sejam refletidas
+      
+      # Sincronizar também pacientes que foram modificados pelo médico logado
       - select * from patients where modified_by = bucket.doctor_id

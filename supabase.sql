@@ -1,14 +1,10 @@
--- supabase.sql
-
--- Criação das tabelas principais
-
 -- Tabela doctors
 CREATE TABLE public.doctors (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   nome_user VARCHAR(50) NOT NULL,
   email_user VARCHAR(50),
-  owner_id uuid NOT NULL, -- O ID do usuário registrado
+  owner_id uuid NOT NULL, -- O ID do usuário registrado (auth.users)
   inserted_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   CONSTRAINT doctors_pkey PRIMARY KEY (id),
@@ -47,7 +43,7 @@ CREATE TABLE public.attendances (
   patient_id uuid NOT NULL, -- Relacionado ao paciente
   hist VARCHAR(2000), -- Histórico do prontuário
   tipo VARCHAR(50) NOT NULL, -- Tipo da consulta
-  -- Demais campos para registros médicos
+  -- Dados adicionais para registros médicos
   tax_mae VARCHAR(30),
   peso_mae REAL,
   estatura_mae REAL,
@@ -91,18 +87,18 @@ ALTER TABLE public.doctors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.patients ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.attendances ENABLE ROW LEVEL SECURITY;
 
--- Políticas para acesso e segurança dos dados
--- Política para garantir que cada médico só pode alterar seus próprios dados
+-- Políticas de segurança para acesso e manipulação de dados
+-- Garantir que cada médico só possa alterar seus próprios dados
 CREATE POLICY "owned_doctors" ON public.doctors FOR ALL USING (auth.uid() = owner_id);
 
--- Política para garantir que os médicos só podem acessar pacientes cadastrados por eles
+-- Garantir que cada médico só possa acessar e alterar seus próprios pacientes
 CREATE POLICY "patients_in_owned_doctors" ON public.patients FOR ALL USING (
   auth.uid() IN (
     SELECT doctors.owner_id FROM doctors WHERE doctors.id = patients.doctor_id
   )
 );
 
--- Política para garantir que os médicos só podem acessar prontuários de seus pacientes
+-- Garantir que cada médico só possa acessar prontuários de seus próprios pacientes
 CREATE POLICY "attendance_access" ON public.attendances FOR ALL USING (
   EXISTS (
     SELECT 1 FROM public.patients WHERE public.patients.id = public.attendances.patient_id

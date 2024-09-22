@@ -2,69 +2,64 @@
 
 import { StyleSheet } from 'react-native';
 
-export default StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#B8E6DD', // Cor de fundo conforme a imagem
-    justifyContent: 'center',
+    backgroundColor: '#A8D5BA',
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 20,
+    marginBottom: 12,
     textAlign: 'center',
   },
   input: {
-    backgroundColor: '#4CAF50', // Verde do campo de texto
-    color: '#fff',
+    backgroundColor: '#6FCF97',
     padding: 10,
-    borderRadius: 5,
-    marginVertical: 5,
+    borderRadius: 8,
+    marginBottom: 12,
     fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#000', // Adicionando borda para os campos
   },
   inputSmall: {
-    width: '48%', // Para campos pequenos como número e bairro
-    backgroundColor: '#4CAF50',
-    color: '#fff',
+    backgroundColor: '#6FCF97',
     padding: 10,
-    borderRadius: 5,
-    marginVertical: 5,
+    borderRadius: 8,
     fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#000',
+    marginRight: 10,
+    flex: 1,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   button: {
-    backgroundColor: '#000', // Botão preto
+    backgroundColor: '#000',
     padding: 15,
-    borderRadius: 10,
-    marginTop: 20,
+    borderRadius: 8,
     alignItems: 'center',
+    marginTop: 20,
   },
   buttonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
-  // Novos estilos para o overlay de loading
   overlay: {
-    ...StyleSheet.absoluteFillObject,
-    alignItems: 'center',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     justifyContent: 'center',
-    zIndex: 1,
-    elevation: 1,
+    alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    gap: 10,
   },
   loadingText: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 18,
+    marginTop: 10,
   },
 });
+
+export default styles;

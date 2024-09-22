@@ -1,3 +1,5 @@
+// powersync/AppSchema.ts
+
 import { column, Schema, Table } from '@powersync/react-native';
 
 // Nome das tabelas
@@ -29,11 +31,11 @@ const patients = new Table(
     id: column.text,
     created_at: column.text,
     nome_patients: column.text,
-    cpf_patients: column.integer,
+    cpf_patients: column.integer,  // CPF como inteiro
     data_nasc_patients: column.text,
     email_patients: column.text,
-    fone_patients: column.integer,
-    cep_patients: column.integer,
+    fone_patients: column.integer, // Telefone como inteiro
+    cep_patients: column.integer,  // CEP como inteiro
     uf_patients: column.text,
     cidade_patients: column.text,
     bairro_patients: column.text,
@@ -41,7 +43,7 @@ const patients = new Table(
     numero_patients: column.integer,
     inserted_at: column.text,
     updated_at: column.text,
-    doctor_id: column.text, // Médico responsável pelo paciente
+    doctor_id: column.text,  // Médico responsável pelo paciente
     modified_by: column.text, // Último médico que modificou o registro
   },
   {
@@ -57,13 +59,12 @@ const attendances = new Table(
   {
     id: column.text,
     created_at: column.text,
-    created_by: column.text, // Médico que criou o prontuário
-    doctor_id: column.text, // Médico responsável pelo paciente
-    patient_id: column.text, // Paciente relacionado ao prontuário
-    consultation_id: column.text, // Identificador da consulta
-    hist: column.text, // Histórico do prontuário
-    tipo: column.text, // Tipo da consulta
-    // Dados médicos adicionais
+    created_by: column.text,  // Médico que criou o prontuário
+    doctor_id: column.text,   // Médico responsável pelo paciente
+    patient_id: column.text,  // Paciente relacionado ao prontuário
+    consultation_id: column.text,
+    hist: column.text,
+    tipo: column.text,
     tax_mae: column.text,
     peso_mae: column.real,
     estatura_mae: column.real,
@@ -110,72 +111,3 @@ export const AppSchema = new Schema({
 
 // Definição de tipos para as tabelas
 export type Database = (typeof AppSchema)['types'];
-export type Todo = Database & {
-  [DOCTORS_TABLE]: {
-    id: string;
-    created_at: string;
-    nome_user: string;
-    email_user: string;
-    owner_id: string;
-    inserted_at: string;
-    updated_at: string;
-  };
-  [PATIENTS_TABLE]: {
-    id: string;
-    created_at: string;
-    nome_patients: string;
-    cpf_patients: number;
-    data_nasc_patients: string;
-    email_patients: string;
-    fone_patients: number;
-    cep_patients: number;
-    uf_patients: string;
-    cidade_patients: string;
-    bairro_patients: string;
-    logradouro_patients: string;
-    numero_patients: number;
-    inserted_at: string;
-    updated_at: string;
-    doctor_id: string;
-    modified_by: string; // Adicionada coluna modified_by para controle de modificações
-  };
-  [ATTENDANCES_TABLE]: {
-    id: string;
-    created_at: string;
-    created_by: string;
-    doctor_id: string;
-    patient_id: string;
-    consultation_id: string;
-    hist: string;
-    tipo: string;
-    tax_mae: string;
-    peso_mae: number;
-    estatura_mae: number;
-    pa_mae: string;
-    tipo_sang_mae: string;
-    tax: string;
-    apgar_1: string;
-    apgar_5: string;
-    peso: number;
-    comprimento: number;
-    pc: number;
-    gesta: number;
-    para: string;
-    cesareas: number;
-    abortos: number;
-    abot_espon: number;
-    vacinas_mae: string;
-    nasc_vivos: number;
-    mort_neo: number;
-    filhos: number;
-    intern: number;
-    cirg: number;
-    quant_cirg: number;
-    consul_pre: number;
-    quant_consul_pre: number;
-    trat_mae: number;
-    descr_mae: string;
-    inserted_at: string;
-    updated_at: string;
-  };
-};

@@ -1,61 +1,63 @@
-// app/styles/AuthStyles.ts
 import { StyleSheet } from 'react-native';
 
-const AuthStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 16,
-    backgroundColor: '#E0F8F7',
+    padding: 20,
+    backgroundColor: '#fff',
   },
   header: {
     fontSize: 24,
     textAlign: 'center',
     marginBottom: 20,
-    color: '#005F9E',
+    color: '#333',
   },
   input: {
-    height: 50,
-    borderColor: '#00A6FF',
+    height: 40,
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 12,
-    padding: 12,
-    backgroundColor: '#fff',
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 5,
   },
   button: {
     backgroundColor: '#005F9E',
-    padding: 16,
-    borderRadius: 8,
+    padding: 15,
+    borderRadius: 5,
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
   },
   linkText: {
-    color: '#005F9E',
     textAlign: 'center',
+    color: '#005F9E',
     marginTop: 10,
   },
   errorInput: {
-    borderColor: '#FF5C5C',
+    borderColor: 'red',
   },
-  // Novos estilos para o overlay de loading
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    alignItems: 'center',
+  // Estilo do loadingOverlay adicionado
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject, // Ocupa a tela inteira
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fundo semitransparente
     justifyContent: 'center',
-    zIndex: 1,
-    elevation: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    gap: 10,
+    alignItems: 'center',
   },
   loadingText: {
     color: '#fff',
-    fontSize: 20,
+    marginTop: 10,
+    fontSize: 18,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject, // Ocupa a tela inteira
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo semitransparente
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
-export default AuthStyles;
+export default styles;

@@ -1,17 +1,16 @@
-// app/auth/Register.tsx
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, View, TextInput, TouchableOpacity, Text } from 'react-native';
-
-import styles from '../styles/AuthStyles';
-
+import { Alert, View, TextInput, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import { useSystem } from '~/powersync/PowerSync';
+import styles from '../styles/AuthStyles';
+import { uuid } from '~/powersync/uuid';
 
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { supabaseConnector } = useSystem();
+  const [loading, setLoading] = useState(false);
+  const { supabaseConnector, db } = useSystem();
   const router = useRouter();
 
   const validateEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
@@ -30,17 +29,56 @@ const Register = () => {
       return;
     }
 
+    setLoading(true);
+
     try {
-      await supabaseConnector.client.auth.signUp({ email, password });
-      Alert.alert('Sucesso', 'Cadastro realizado com sucesso');
-      router.replace('/'); // Volta para a tela de login
-    } catch (error) {
-      Alert.alert('Erro', 'Falha no cadastro, tente novamente');
+      // Realizando o registro no Supabase
+      const { data, error } = await supabaseConnector.client.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      // Recuperando o ID do usuário criado
+      const userID = data?.user?.id;
+
+      if (userID) {
+        // Registrando o novo médico na tabela "doctors"
+        const doctorId = uuid(); // Gerando um UUID para o médico
+
+        await db.insertInto('doctors')
+          .values({
+            id: doctorId,
+            nome_user: email, // Supondo que o nome seja o email; ajustar conforme necessário
+            email_user: email,
+            owner_id: userID, // Vinculando ao Supabase auth user ID
+            inserted_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .execute();
+
+        console.log('Usuário registrado com sucesso na tabela doctors');
+        Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
+        router.replace('/'); // Voltar para a tela de login
+      }
+    } catch (error: any) {
+      console.error('Erro ao registrar o usuário:', error.message);
+      Alert.alert('Erro', 'Ocorreu um erro ao registrar o usuário.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <View style={styles.container}>
+      {loading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#fff" />
+        </View>
+      )}
       <Text style={styles.header}>Criar Conta</Text>
       <TextInput
         placeholder="Email"
