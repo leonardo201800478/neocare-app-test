@@ -8,7 +8,7 @@ CREATE TABLE public.doctors (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   nome_user VARCHAR(50) NOT NULL,
   email_user VARCHAR(50),
-  owner_id uuid NOT NULL,
+  owner_id uuid NOT NULL, -- O ID do usuário registrado
   inserted_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   CONSTRAINT doctors_pkey PRIMARY KEY (id),
@@ -32,21 +32,22 @@ CREATE TABLE public.patients (
   numero_patients INTEGER,
   inserted_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  doctor_id uuid NOT NULL,
+  doctor_id uuid NOT NULL, -- Relacionado ao médico responsável
+  modified_by uuid NOT NULL, -- ID do médico que fez a última modificação
   CONSTRAINT patients_pkey PRIMARY KEY (id),
-  CONSTRAINT patients_doctor_id_fkey FOREIGN KEY (doctor_id) REFERENCES doctors (id) ON DELETE CASCADE
+  CONSTRAINT patients_doctor_id_fkey FOREIGN KEY (doctor_id) REFERENCES doctors (id) ON DELETE CASCADE,
+  CONSTRAINT patients_modified_by_fkey FOREIGN KEY (modified_by) REFERENCES doctors (id) ON DELETE SET NULL
 ) TABLESPACE pg_default;
 
--- Tabela attendances
+-- Tabela attendances (prontuários)
 CREATE TABLE public.attendances (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  created_by uuid NULL,
-  doctor_id uuid NOT NULL,
-  patient_id uuid NOT NULL,
-  consultation_id uuid NOT NULL,
-  hist VARCHAR(2000),
-  tipo VARCHAR(50) NOT NULL,
+  created_by uuid NOT NULL, -- Quem criou o prontuário (doctor_id)
+  patient_id uuid NOT NULL, -- Relacionado ao paciente
+  hist VARCHAR(2000), -- Histórico do prontuário
+  tipo VARCHAR(50) NOT NULL, -- Tipo da consulta
+  -- Demais campos para registros médicos
   tax_mae VARCHAR(30),
   peso_mae REAL,
   estatura_mae REAL,
@@ -76,31 +77,36 @@ CREATE TABLE public.attendances (
   descr_mae VARCHAR(300),
   inserted_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  doctor_id uuid NOT NULL, -- Médico que registrou o prontuário
   CONSTRAINT attendances_pkey PRIMARY KEY (id),
   CONSTRAINT attendances_doctor_id_fkey FOREIGN KEY (doctor_id) REFERENCES doctors (id) ON DELETE CASCADE,
-  CONSTRAINT attendances_patient_id_fkey FOREIGN KEY (patient_id) REFERENCES patients (id) ON DELETE CASCADE,
-  CONSTRAINT attendances_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users (id) ON DELETE SET NULL
+  CONSTRAINT attendances_patient_id_fkey FOREIGN KEY (patient_id) REFERENCES patients (id) ON DELETE CASCADE
 ) TABLESPACE pg_default;
 
 -- Publicação powersync para sincronizar as tabelas
 CREATE PUBLICATION powersync FOR TABLE public.doctors, public.patients, public.attendances;
 
 -- Habilitar RLS (Row Level Security) nas tabelas
--- See https://supabase.com/docs/guides/auth/row-level-security for more details.
 ALTER TABLE public.doctors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.patients ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.attendances ENABLE ROW LEVEL SECURITY;
 
--- Criar políticas para as tabelas
-CREATE POLICY "owned doctors" ON public.doctors FOR ALL USING (auth.uid() = owner_id);
-CREATE POLICY "patients in owned doctors" ON public.patients FOR ALL USING (
+-- Políticas para acesso e segurança dos dados
+-- Política para garantir que cada médico só pode alterar seus próprios dados
+CREATE POLICY "owned_doctors" ON public.doctors FOR ALL USING (auth.uid() = owner_id);
+
+-- Política para garantir que os médicos só podem acessar pacientes cadastrados por eles
+CREATE POLICY "patients_in_owned_doctors" ON public.patients FOR ALL USING (
   auth.uid() IN (
     SELECT doctors.owner_id FROM doctors WHERE doctors.id = patients.doctor_id
   )
 );
+
+-- Política para garantir que os médicos só podem acessar prontuários de seus pacientes
 CREATE POLICY "attendance_access" ON public.attendances FOR ALL USING (
   EXISTS (
     SELECT 1 FROM public.patients WHERE public.patients.id = public.attendances.patient_id
+    AND public.patients.doctor_id = auth.uid()
   )
 );
 
