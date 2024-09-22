@@ -1,3 +1,5 @@
+// app/styles/CadastroPacienteStyles.ts
+
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
@@ -50,5 +52,19 @@ export default StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  // Novos estilos para o overlay de loading
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
+    elevation: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    gap: 10,
+  },
+  loadingText: {
+    color: '#fff',
+    fontSize: 20,
   },
 });

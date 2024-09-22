@@ -1,3 +1,5 @@
+// sync-rules.yaml for Powersync
+
 bucket_definitions:
   user_doctors:
     # Separate bucket per doctor

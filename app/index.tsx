@@ -1,65 +1,23 @@
 // app/index.tsx
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Alert, View, TextInput, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
+import { useEffect, useState } from 'react';
 
-import styles from './styles/AuthStyles';
-
-import { useSystem } from '~/powersync/PowerSync';
-
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { supabaseConnector } = useSystem();
+const Index = () => {
   const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
 
-  const onSignInPress = async () => {
-    setLoading(true);
-    try {
-      // Use the PowerSync specific login method
-      await supabaseConnector.login(email, password);
-    } catch (error: any) {
-      Alert.alert(error.message);
-    } finally {
-      setLoading(false);
+  // Controla a montagem inicial
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      router.replace('/auth/Login'); // Redireciona automaticamente para a tela de Login
     }
-  };
+  }, [isMounted]);
 
-  return (
-    <View style={styles.container}>
-      {loading && (
-        <View style={styles.overlay}>
-          <ActivityIndicator size="large" color="#fff" />
-          <Text style={styles.loadingText}>Loading...</Text>
-        </View>
-      )}
-      <Text style={styles.header}>Neo Care - Login</Text>
-      <TextInput
-        placeholder="john@doe.com"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-        keyboardType="email-address"
-      />
-      <TextInput
-        placeholder="Senha"
-        value={password}
-        onChangeText={setPassword}
-        style={styles.input}
-        secureTextEntry
-      />
-      <TouchableOpacity style={styles.button} onPress={onSignInPress}>
-        <Text style={styles.buttonText}>Entrar</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.push('./Register')}>
-        <Text style={styles.linkText}>Criar novo usuário</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.push('./ForgotPassword')}>
-        <Text style={styles.linkText}>Esqueci a senha</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  return null; // Não renderiza nada, apenas redireciona
 };
 
-export default Login;
+export default Index;

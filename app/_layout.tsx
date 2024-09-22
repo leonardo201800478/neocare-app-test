@@ -2,60 +2,53 @@
 import { Session } from '@supabase/supabase-js';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 
 import { useSystem } from '~/powersync/PowerSync';
-import { PowerSyncProvider } from '~/powersync/PowerSyncProvider';
 
-const InitialLayout = () => {
+const Layout = () => {
   const [session, setSession] = useState<Session | null>(null);
-  const [initialized, setInitialized] = useState<boolean>(false);
-
-  const segments = useSegments();
+  const [initialized, setInitialized] = useState(false);
+  const [loading, setLoading] = useState(true); // Adiciona um estado de carregamento
   const router = useRouter();
-
+  const segments = useSegments();
   const { supabaseConnector } = useSystem();
-  const system = useSystem();
 
   useEffect(() => {
-    system.init();
-  }, []);
-
-  useEffect(() => {
-    // Listen for changes to authentication state
-    const { data } = supabaseConnector.client.auth.onAuthStateChange(async (event, session) => {
-      console.log('supabase.auth.onAuthStateChange', event, session);
+    const {
+      data: { subscription },
+    } = supabaseConnector.client.auth.onAuthStateChange((_, session) => {
       setSession(session);
       setInitialized(true);
+      setLoading(false); // Termina o estado de carregamento após a inicialização
     });
-    return () => {
-      data.subscription.unsubscribe();
-    };
+
+    return () => subscription?.unsubscribe();
   }, []);
 
   useEffect(() => {
     if (!initialized) return;
 
-    // Check if the path/url is in the (home) group
-    const inAuthGroup = segments[0] === '(home)';
+    const inAuthGroup = segments[0] === 'auth';
 
-    if (session && !inAuthGroup) {
-      // Redirect authenticated users to the list page
-      router.replace('/(home)/');
-    } else if (!session) {
-      // Redirect unauthenticated users to the login page
-      router.replace('/');
+    // Verifica o estado da sessão após a inicialização
+    if (!session && !inAuthGroup) {
+      router.replace('/auth/Login');
+    } else if (session && inAuthGroup) {
+      router.replace('/home/HomeScreen');
     }
   }, [session, initialized]);
+
+  // Exibe um indicador de carregamento enquanto o layout está inicializando
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return <Slot />;
 };
 
-const RootLayout = () => {
-  return (
-    <PowerSyncProvider>
-      <InitialLayout />
-    </PowerSyncProvider>
-  );
-};
-
-export default RootLayout;
+export default Layout;

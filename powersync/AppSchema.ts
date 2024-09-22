@@ -1,5 +1,3 @@
-// powersync/AppSchema.ts
-
 import { column, Schema, Table } from '@powersync/react-native';
 
 // Nome das tabelas
@@ -7,25 +5,25 @@ export const DOCTORS_TABLE = 'doctors';
 export const PATIENTS_TABLE = 'patients';
 export const ATTENDANCES_TABLE = 'attendances';
 
-// Doctors table
+// Tabela doctors
 const doctors = new Table(
   {
     id: column.text,
     created_at: column.text,
     nome_user: column.text,
     email_user: column.text,
-    owner_id: column.text,
+    owner_id: column.text, // Dono do registro (usuário)
     inserted_at: column.text,
-    updated_at: column.text
+    updated_at: column.text,
   },
   {
     indexes: {
-      owner_id_index: ['owner_id']
-    }
+      owner_id_index: ['owner_id'],
+    },
   }
 );
 
-// Patients table
+// Tabela patients
 const patients = new Table(
   {
     id: column.text,
@@ -43,26 +41,29 @@ const patients = new Table(
     numero_patients: column.integer,
     inserted_at: column.text,
     updated_at: column.text,
-    doctor_id: column.text
+    doctor_id: column.text, // Médico responsável pelo paciente
+    modified_by: column.text, // Último médico que modificou o registro
   },
   {
     indexes: {
-      doctor_id_index: ['doctor_id']
-    }
+      doctor_id_index: ['doctor_id'],
+      modified_by_index: ['modified_by'], // Índice para rastrear quem modificou
+    },
   }
 );
 
-// Attendances table
+// Tabela attendances (prontuários)
 const attendances = new Table(
   {
     id: column.text,
     created_at: column.text,
-    created_by: column.text,
-    doctor_id: column.text,
-    patient_id: column.text,
-    consultation_id: column.text,
-    hist: column.text,
-    tipo: column.text,
+    created_by: column.text, // Médico que criou o prontuário
+    doctor_id: column.text, // Médico responsável pelo paciente
+    patient_id: column.text, // Paciente relacionado ao prontuário
+    consultation_id: column.text, // Identificador da consulta
+    hist: column.text, // Histórico do prontuário
+    tipo: column.text, // Tipo da consulta
+    // Dados médicos adicionais
     tax_mae: column.text,
     peso_mae: column.real,
     estatura_mae: column.real,
@@ -91,20 +92,20 @@ const attendances = new Table(
     trat_mae: column.integer,
     descr_mae: column.text,
     inserted_at: column.text,
-    updated_at: column.text
+    updated_at: column.text,
   },
   {
     indexes: {
-      doctor_patient_index: ['doctor_id', 'patient_id']
-    }
+      doctor_patient_index: ['doctor_id', 'patient_id'], // Índice para interligar médico e paciente
+    },
   }
 );
 
-// App Schema
+// Definindo o schema para o App
 export const AppSchema = new Schema({
   doctors,
   patients,
-  attendances
+  attendances,
 });
 
 // Definição de tipos para as tabelas
@@ -136,6 +137,7 @@ export type Todo = Database & {
     inserted_at: string;
     updated_at: string;
     doctor_id: string;
+    modified_by: string; // Adicionada coluna modified_by para controle de modificações
   };
   [ATTENDANCES_TABLE]: {
     id: string;

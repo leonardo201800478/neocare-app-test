@@ -1,3 +1,5 @@
+-- supabase.sql
+
 -- Criação das tabelas principais
 
 -- Tabela doctors
