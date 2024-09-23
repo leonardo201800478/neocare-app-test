@@ -1,5 +1,5 @@
 Prepare o Ambiente para developer build.
-https://docs.expo.dev/get-started/set-up-your-environment/?platform=android&device=simulated&mode=development-build
+https://docs.expo.dev/get-started/set-up-your-environment/?platform=android&device=simulated&mode=development-build&buildEnv=local
 
 Clone o projeto;
 
