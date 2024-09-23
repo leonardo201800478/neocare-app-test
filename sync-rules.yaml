@@ -1,14 +1,14 @@
 bucket_definitions:
   user_doctors:
-    # Bucket separado por médico
+    # Todos os médicos logados
     parameters: select id as doctor_id from doctors where owner_id = request.user_id()
     data:
-      # Sincronizar dados do médico logado
-      - select * from doctors where id = bucket.doctor_id
-      # Sincronizar pacientes vinculados ao médico logado
-      - select * from patients where doctor_id = bucket.doctor_id
-      # Sincronizar prontuários vinculados ao médico e seus pacientes
-      - select * from attendances where doctor_id = bucket.doctor_id
+      # Sincronizar todos os médicos (sem restrição ao médico logado)
+      - select * from doctors
+      # Sincronizar todos os pacientes (sem restrição ao doctor_id)
+      - select * from patients
+      # Sincronizar todos os prontuários de todos os pacientes (sem restrição ao doctor_id)
+      - select * from attendances
       
-      # Sincronizar também pacientes que foram modificados pelo médico logado
-      - select * from patients where modified_by = bucket.doctor_id
+      # Sincronizar também todos os pacientes modificados por qualquer médico (sem restrição ao doctor_id)
+      - select * from patients where modified_by is not null
