@@ -29,28 +29,16 @@ const patients = new Table(
     id: column.text,
     created_at: column.text,
     nome_patients: column.text,
-<<<<<<< HEAD
     cpf_patients: column.text, // CPF como texto devido ao seu tamanho
     data_nasc_patients: column.text,
     email_patients: column.text,
     fone_patients: column.text, // Telefone como texto para evitar problemas com formatação
     cep_patients: column.text, // CEP como texto para evitar problemas com formatação
-=======
-    cpf_patients: column.text,  // CPF como inteiro
-    data_nasc_patients: column.text,
-    email_patients: column.text,
-    fone_patients: column.text, // Telefone como inteiro
-    cep_patients: column.text,  // CEP como inteiro
->>>>>>> 401e244fd19b38e8c1d0d6d3e0464982c47726d3
     uf_patients: column.text,
     cidade_patients: column.text,
     bairro_patients: column.text,
     logradouro_patients: column.text,
-<<<<<<< HEAD
     numero_patients: column.text, // Número como texto para cobrir casos de sufixos
-=======
-    numero_patients: column.text,
->>>>>>> 401e244fd19b38e8c1d0d6d3e0464982c47726d3
     inserted_at: column.text,
     updated_at: column.text,
     doctor_id: column.text, // Médico responsável pelo paciente
@@ -76,27 +64,16 @@ const attendances = new Table(
     hist: column.text,
     tipo: column.text,
     tax_mae: column.text,
-<<<<<<< HEAD
     peso_mae: column.text, // Peso como texto para cobrir diferentes formatos
     estatura_mae: column.text, // Altura como texto para cobrir diferentes formatos
-=======
-    peso_mae: column.text,
-    estatura_mae: column.text,
->>>>>>> 401e244fd19b38e8c1d0d6d3e0464982c47726d3
     pa_mae: column.text,
     tipo_sang_mae: column.text,
     tax: column.text,
     apgar_1: column.text,
     apgar_5: column.text,
-<<<<<<< HEAD
     peso: column.text, // Peso do bebê como texto
     comprimento: column.text, // Comprimento do bebê como texto
     pc: column.text, // Perímetro cefálico como texto
-=======
-    peso: column.text,
-    comprimento: column.text,
-    pc: column.text,
->>>>>>> 401e244fd19b38e8c1d0d6d3e0464982c47726d3
     gesta: column.text,
     para: column.text,
     cesareas: column.text,
