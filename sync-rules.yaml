@@ -1,5 +1,4 @@
 bucket_definitions:
-<<<<<<< HEAD
   all_doctors:
     # No need for parameters to filter by a specific doctor
     data:
@@ -9,18 +8,3 @@ bucket_definitions:
       - select * from patients
       # Sync all attendances (medical records), regardless of doctor
       - select * from attendances
-=======
-  user_doctors:
-    # Todos os médicos logados
-    parameters: select id as doctor_id from doctors where owner_id = request.user_id()
-    data:
-      # Sincronizar todos os médicos (sem restrição ao médico logado)
-      - select * from doctors
-      # Sincronizar todos os pacientes (sem restrição ao doctor_id)
-      - select * from patients
-      # Sincronizar todos os prontuários de todos os pacientes (sem restrição ao doctor_id)
-      - select * from attendances
-      
-      # Sincronizar também todos os pacientes modificados por qualquer médico (sem restrição ao doctor_id)
-      - select * from patients where modified_by is not null
->>>>>>> 401e244fd19b38e8c1d0d6d3e0464982c47726d3
