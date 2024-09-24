@@ -68,8 +68,10 @@ export class SupabaseConnector implements PowerSyncBackendConnector {
         let result: any = null;
         switch (op.op) {
           case UpdateType.PUT:
-            const record = { ...op.opData, id: op.id };
-            result = await table.upsert(record);
+            {
+              const record = { ...op.opData, id: op.id };
+              result = await table.upsert(record);
+            }
             break;
           case UpdateType.PATCH:
             result = await table.update(op.opData).eq('id', op.id);
