@@ -3,8 +3,8 @@ CREATE TABLE
  public.doctors (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  nome_user TEXT NOT NULL,
-  email_user TEXT,
+  nome_user TEXT,
+  email_user TEXT NOT NULL,
   owner_id uuid NOT NULL, -- The registered user's ID from auth.users
   inserted_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),

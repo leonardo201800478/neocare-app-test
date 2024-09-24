@@ -8,6 +8,7 @@ import { useSystem } from '~/powersync/PowerSync';
 import { uuid } from '~/powersync/uuid';
 
 const Register = () => {
+  const [name, setName] = useState(''); // Novo estado para o nome do usuário
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -28,6 +29,10 @@ const Register = () => {
     }
     if (password !== confirmPassword) {
       Alert.alert('Erro', 'As senhas não conferem');
+      return;
+    }
+    if (name.trim() === '') {
+      Alert.alert('Erro', 'O nome não pode estar vazio');
       return;
     }
 
@@ -55,7 +60,7 @@ const Register = () => {
           .insertInto('doctors')
           .values({
             id: doctorId,
-            nome_user: email, // Supondo que o nome seja o email; ajustar conforme necessário
+            nome_user: name, // Usando o nome coletado no input
             email_user: email,
             owner_id: userID, // Vinculando ao Supabase auth user ID
             inserted_at: new Date().toISOString(),
@@ -83,6 +88,10 @@ const Register = () => {
         </View>
       )}
       <Text style={styles.header}>Criar Conta</Text>
+
+      {/* Novo campo de entrada para o nome */}
+      <TextInput placeholder="Nome" value={name} onChangeText={setName} style={styles.input} />
+
       <TextInput
         placeholder="Email"
         value={email}
